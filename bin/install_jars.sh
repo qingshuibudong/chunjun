@@ -26,3 +26,6 @@ mvn install:install-file -DgroupId=com.pingcap.ticdc.cdc -DartifactId=ticdc-deco
 
 ## inceptor driver
 mvn install:install-file -DgroupId=io.transwarp -DartifactId=inceptor-driver -Dversion=6.0.2 -Dpackaging=jar -Dfile=../jars/inceptor-driver-6.0.2.jar
+
+## kafka driver
+mvn install:install-file -DgroupId=io.confluent -DartifactId=kafka-schema-registry-client -Dversion=5.5.2 -Dpackaging=jar -Dfile=../jars/kafka-schema-registry-client-5.5.2.jar
