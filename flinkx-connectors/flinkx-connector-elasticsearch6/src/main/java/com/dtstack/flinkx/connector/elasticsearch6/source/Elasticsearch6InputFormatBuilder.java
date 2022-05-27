@@ -29,12 +29,11 @@ import com.google.common.base.Preconditions;
  * @author: lany
  * @create: 2021/06/18 12:00
  */
-public class Elasticsearch6InputFormatBuilder extends BaseRichInputFormatBuilder {
-
-    protected Elasticsearch6InputFormat format;
+public class Elasticsearch6InputFormatBuilder
+        extends BaseRichInputFormatBuilder<Elasticsearch6InputFormat> {
 
     public Elasticsearch6InputFormatBuilder() {
-        super.format = this.format = new Elasticsearch6InputFormat();
+        super(new Elasticsearch6InputFormat());
     }
 
     public void setEsConf(Elasticsearch6Conf esConf) {
