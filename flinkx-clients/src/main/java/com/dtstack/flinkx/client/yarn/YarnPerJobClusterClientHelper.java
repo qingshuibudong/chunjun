@@ -182,20 +182,17 @@ public class YarnPerJobClusterClientHelper implements ClusterClientHelper {
                 jobManagerMemoryMb =
                         Math.max(
                                 MIN_JM_MEMORY,
-                                ValueUtil.getInt(
+                                getMemoryMb(
                                         conProp.getProperty(
                                                 JobManagerOptions.TOTAL_PROCESS_MEMORY.key())));
-                jobManagerMemoryMb = jobManagerMemoryMb >> 20;
             }
             if (conProp.containsKey(TaskManagerOptions.TOTAL_PROCESS_MEMORY.key())) {
                 taskManagerMemoryMb =
                         Math.max(
                                 MIN_TM_MEMORY,
-                                ValueUtil.getInt(
+                                getMemoryMb(
                                         conProp.getProperty(
                                                 TaskManagerOptions.TOTAL_PROCESS_MEMORY.key())));
-
-                taskManagerMemoryMb = taskManagerMemoryMb >> 20;
             }
             if (conProp.containsKey(NUM_TASK_SLOTS.key())) {
                 slotsPerTaskManager = ValueUtil.getInt(conProp.get(NUM_TASK_SLOTS.key()));
@@ -232,5 +229,19 @@ public class YarnPerJobClusterClientHelper implements ClusterClientHelper {
                 YarnConfLoader.getYarnConf(launcherOptions.getHadoopConfDir()));
 
         return clusterSpecification;
+    }
+
+    private int getMemoryMb(String memory) {
+        if (StringUtils.isBlank(memory)) {
+            throw new IllegalArgumentException("invalid memory value: " + memory);
+        }
+        String m = memory.trim().toLowerCase();
+        if (m.endsWith("m")) {
+            return Integer.parseInt(m.substring(0, m.length() - 1));
+        } else if (m.endsWith("g")) {
+            return Integer.parseInt(m.substring(0, m.length() - 1)) * 1024;
+        } else {
+            throw new IllegalArgumentException("memory unit only support m,g");
+        }
     }
 }
