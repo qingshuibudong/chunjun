@@ -40,6 +40,8 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 
@@ -76,7 +78,10 @@ public class Launcher {
         String s = temp.get("-p");
         if (StringUtils.isNotBlank(s)) {
             HashMap<String, String> parameter = JsonModifyUtil.CommandTransform(s);
-            temp.put("-job", JsonModifyUtil.JsonValueReplace(temp.get("-job"), parameter));
+            // replace placeholders
+            String replacedJob = JsonModifyUtil.JsonValueReplace(temp.get("-job"), parameter);
+            // encode job
+            temp.put("-job", URLEncoder.encode(replacedJob, StandardCharsets.UTF_8.name()));
         }
 
         // 清空list，填充修改后的参数值

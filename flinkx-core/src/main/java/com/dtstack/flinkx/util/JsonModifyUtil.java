@@ -39,7 +39,11 @@ public class JsonModifyUtil {
     /** 将命令行中的修改命令转化为HashMap保存 */
     public static HashMap<String, String> CommandTransform(String command) {
         HashMap<String, String> parameter = new HashMap<>();
-        String[] split = StringUtils.split(command, ConstantValue.COMMA_SYMBOL);
+        if (StringUtils.isBlank(command)) {
+            return parameter;
+        }
+
+        String[] split = command.split(ConstantValue.DOUBLE_COMMA_SYMBOL);
         for (String item : split) {
             String[] temp = item.split(ConstantValue.EQUAL_SYMBOL);
             parameter.put(temp[0], temp[1]);
