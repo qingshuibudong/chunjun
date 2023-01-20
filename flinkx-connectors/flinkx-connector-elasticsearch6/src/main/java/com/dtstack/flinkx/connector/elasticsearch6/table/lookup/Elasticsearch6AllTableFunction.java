@@ -101,8 +101,19 @@ public class Elasticsearch6AllTableFunction extends AbstractAllTableFunction {
      * @return
      */
     private SearchRequest buildSearchRequest() {
+        String[] keyNames = null;
+        String[] keys = null;
+        if (elasticsearchConf.getFilter() != null) {
+            keyNames = elasticsearchConf.getFilter().keySet().toArray(new String[0]);
+            int size = elasticsearchConf.getFilter().size();
+            keys = new String[size];
+
+            for (int i = 0; i < size; i++) {
+                keys[i] = elasticsearchConf.getFilter().get(keyNames[i]);
+            }
+        }
         SearchSourceBuilder sourceBuilder =
-                Elasticsearch6RequestFactory.createSourceBuilder(fieldsName, null, null);
+                Elasticsearch6RequestFactory.createSourceBuilder(fieldsName, keyNames, keys);
         sourceBuilder.size(lookupConf.getFetchSize());
         return Elasticsearch6RequestFactory.createSearchRequest(
                 elasticsearchConf.getIndex(), elasticsearchConf.getType(), null, sourceBuilder);

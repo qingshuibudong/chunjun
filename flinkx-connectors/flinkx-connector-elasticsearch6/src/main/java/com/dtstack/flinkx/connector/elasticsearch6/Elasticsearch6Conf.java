@@ -20,8 +20,12 @@ package com.dtstack.flinkx.connector.elasticsearch6;
 
 import com.dtstack.flinkx.conf.FlinkxCommonConf;
 
+import org.apache.flink.configuration.ConfigOption;
+import org.apache.flink.configuration.ConfigOptions;
+
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @description:
@@ -30,6 +34,12 @@ import java.util.List;
  * @create: 2021/06/16 15:36
  */
 public class Elasticsearch6Conf extends FlinkxCommonConf implements Serializable {
+
+    public static final ConfigOption<Map<String, String>> FILTER =
+            ConfigOptions.key("filter")
+                    .mapType()
+                    .defaultValue(null)
+                    .withDescription("load elasticsearch data with filter");
 
     private static final long serialVersionUID = 2L;
 
@@ -58,6 +68,8 @@ public class Elasticsearch6Conf extends FlinkxCommonConf implements Serializable
 
     /** table field names */
     private String[] fieldNames;
+
+    private Map<String, String> filter;
 
     public List<String> getHosts() {
         return hosts;
@@ -121,5 +133,13 @@ public class Elasticsearch6Conf extends FlinkxCommonConf implements Serializable
 
     public void setFieldNames(String[] fieldNames) {
         this.fieldNames = fieldNames;
+    }
+
+    public Map<String, String> getFilter() {
+        return filter;
+    }
+
+    public void setFilter(Map<String, String> filter) {
+        this.filter = filter;
     }
 }
