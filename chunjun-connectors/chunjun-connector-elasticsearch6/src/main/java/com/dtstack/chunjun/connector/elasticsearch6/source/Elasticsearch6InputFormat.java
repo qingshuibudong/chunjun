@@ -91,9 +91,22 @@ public class Elasticsearch6InputFormat extends BaseRichInputFormat {
 
         rhlClient = Elasticsearch6ClientFactory.createClient(elasticsearchConf);
         scroll = new Scroll(TimeValue.timeValueMinutes(keepAlive));
+
+        String[] keyNames = null;
+        String[] keys = null;
+        if (elasticsearchConf.getFilter() != null) {
+            keyNames = elasticsearchConf.getFilter().keySet().toArray(new String[0]);
+            int size = elasticsearchConf.getFilter().size();
+            keys = new String[size];
+
+            for (int i = 0; i < size; i++) {
+                keys[i] = elasticsearchConf.getFilter().get(keyNames[i]);
+            }
+        }
+
         String[] fieldsNames = elasticsearchConf.getFieldNames();
         SearchSourceBuilder searchSourceBuilder =
-                Elasticsearch6RequestFactory.createSourceBuilder(fieldsNames, null, null);
+                Elasticsearch6RequestFactory.createSourceBuilder(fieldsNames, keyNames, keys);
         searchSourceBuilder.size(elasticsearchConf.getBatchSize());
 
         if (StringUtils.isNotEmpty(query)) {
