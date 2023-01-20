@@ -30,6 +30,7 @@ import org.apache.flink.table.factories.FactoryUtil;
 import org.apache.flink.table.utils.TableSchemaUtils;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -104,6 +105,13 @@ public class Elasticsearch6DynamicTableFactory extends ElasticsearchDynamicTable
         return requiredOptions;
     }
 
+    @Override
+    public Set<ConfigOption<?>> optionalOptions() {
+        Set<ConfigOption<?>> configOptions = super.optionalOptions();
+        configOptions.add(Elasticsearch6Conf.FILTER);
+        return configOptions;
+    }
+
     private Elasticsearch6Conf getElasticsearchConf(
             ReadableConfig readableConfig, TableSchema schema) {
         Elasticsearch6Conf elasticsearchConf = new Elasticsearch6Conf();
@@ -115,6 +123,8 @@ public class Elasticsearch6DynamicTableFactory extends ElasticsearchDynamicTable
         elasticsearchConf.setBatchSize(readableConfig.get(BULK_FLUSH_MAX_ACTIONS_OPTION));
         elasticsearchConf.setUsername(readableConfig.get(USERNAME_OPTION));
         elasticsearchConf.setPassword(readableConfig.get(PASSWORD_OPTION));
+        Map<String, String> filter = readableConfig.get(Elasticsearch6Conf.FILTER);
+        elasticsearchConf.setFilter(filter);
 
         List<String> keyFields = schema.getPrimaryKey().map(pk -> pk.getColumns()).orElse(null);
         elasticsearchConf.setIds(keyFields);
