@@ -126,7 +126,8 @@ public class Elasticsearch6LruTableFunction extends AbstractLruTableFunction {
 
                     @Override
                     public void onFailure(Exception e) {
-                        future.completeExceptionally(new RuntimeException("Response failed!"));
+                        future.completeExceptionally(
+                                new RuntimeException("Response failed!" + e.getMessage()));
                     }
                 });
     }
